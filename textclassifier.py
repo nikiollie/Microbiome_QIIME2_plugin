@@ -104,3 +104,5 @@ epochs = range(1, len(acc) + 1)
 #plt.legend()
 
 #plt.show()
+
+#nicolewashere
