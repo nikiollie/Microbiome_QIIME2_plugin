@@ -1,22 +1,21 @@
 import sys
 import csv
-import requests
 import os
-from Bio import SeqIO
+
 
 def dataParser(input_file):
     base = input_file
     name_file = os.path.splitext(base)[0]
 
-    f = open(name_file + ".txt", "w")
+    f = open('MetaGAN/Edited_Genomes/' + name_file + ".txt", "w")
 
-    with open(input_file, "r") as fin:
+    with open('MetaGAN/Genomes/' + name_file + ".fna", "r") as fin:
         data = fin.read().splitlines(True)
-    with open(f, 'w') as fout:
+    with open('MetaGAN/Edited_Genomes/' + name_file + ".txt", 'w') as fout:
         fout.writelines(data[1:]) 
 
 
-directory_in_str = '/MetaGAN/Genomes'
+directory_in_str = 'MetaGAN\Genomes'
 directory = os.fsencode(directory_in_str)
 
 for file in os.listdir(directory):
