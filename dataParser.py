@@ -26,12 +26,13 @@ directory_in_str = 'MetaGAN\Genomes'
 #return bytes unchanged
 directory = os.fsencode(directory_in_str)
 
-#return a list containing the names of the entries in the directory 
-#given by path
+#listdir function returns a list containing the names 
+#of the entries in the directory given by the path
+#iterate through every file in the directory
 for file in os.listdir(directory):
     
-    #Decode the path-like filename from the filesystem encoding
-    #return str unchanged 
+    #fsdecode function decodes the path-like filename 
+    #from the filesystem encoding and returns the str unchanged 
     filename = os.fsdecode(file)
     if filename.endswith(".fna"): 
         # print(os.path.join(directory, filename))
