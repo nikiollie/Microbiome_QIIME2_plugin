@@ -7,8 +7,7 @@ def dataParser(input_file):
     #remove '.fna' from file name string
     name_file = os.path.splitext(input_file)[0]
     
-    sequences = list(skbio.io.read('MetaGAN/Genomes/' + input_file, 
-        format='fasta')) 
+    sequences = list(skbio.io.read(input_file, format='fasta')) 
     
     sequence = ""
     #open file and write to it(modify file)
