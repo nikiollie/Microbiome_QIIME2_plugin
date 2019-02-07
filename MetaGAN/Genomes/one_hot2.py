@@ -38,11 +38,22 @@ for i in range(0,10000):
 
 #accepts input label from console
 labels = input("enter label: ")
-#array of 10000 labels of input name to attach to the training 10000x2 matrix 
 labels = np.asarray([str(labels)]*10000)
 training_examples = np.asarray(training_examples)
-print(labels.shape)
-print(training_examples.shape)
-print(training_examples)
+#print(labels.shape)
+#print(labels)
+#print(training_examples.shape)
+#print(training_examples)
+outer_arr=[]
+
+for i in range(1):
+    for j in range(10000):
+        outer_arr.append([[labels[j]]])
+for k in range(len(outer_arr)):
+    #print(k)
+    outer_arr[k]+=[training_examples[k]]
+#outer_arr=np.asarray(outer_arr)
+print(outer_arr)
+
 #labeled_examples = np.vstack((training_examples,labels))
 #training_examples = np.asarray(labeled_examples_list)
