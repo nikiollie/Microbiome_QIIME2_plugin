@@ -3,8 +3,10 @@ import numpy as np
 def read_fasta(fp):
         name, seq = None, []
         for line in fp:
+            #remove first line from file
             line = line.rstrip()
             if line.startswith(">"):
+                #create a string
                 if name: yield (name, ''.join(seq))
                 name, seq = line, []
             else:
@@ -38,6 +40,7 @@ for i in range(0,10000):
 
 #accepts input label from console
 labels = input("enter label: ")
+#create an array with 10K elements for 10K rows
 labels = np.asarray([str(labels)]*10000)
 training_examples = np.asarray(training_examples)
 #print(labels.shape)
@@ -47,8 +50,12 @@ training_examples = np.asarray(training_examples)
 outer_arr=[]
 
 for i in range(1):
+    #create 10,000 rows
     for j in range(10000):
+        #create a column on the label names
         outer_arr.append([[labels[j]]])
+#add another array into the the array that contains label array
+#this will create one row with two columns
 for k in range(len(outer_arr)):
     #print(k)
     outer_arr[k]+=[training_examples[k]]
