@@ -16,7 +16,7 @@ def vectorizeSequence(seq):
     # Flip the matrix up-down and left-right for reverse compliment
     ltrdict = {'A':[1,0,0,0],'C':[0,1,0,0],'G':[0,0,1,0],'T':[0,0,0,1]}
     return np.array([ltrdict[x] for x in seq])
-
+    #return [[ltrdict[x] for x in seq]]
 #accepts input file from console (.fna)
 fileInput = input("enter file: ")
 with open(str(fileInput)) as fp:
