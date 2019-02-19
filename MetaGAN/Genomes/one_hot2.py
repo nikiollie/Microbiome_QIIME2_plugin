@@ -47,22 +47,29 @@ training_examples = np.asarray(training_examples)
 #print(labels)
 #print(training_examples.shape)
 #print(training_examples)
-outer_arr=[]
+#outer_arr=[]
 
-for i in range(1):
+#for i in range(1):
     #create 10,000 rows
-    for j in range(10000):
+    #for j in range(10000):
         #create a column on the label names
-        outer_arr.append([[labels[j]]])
+        #outer_arr.append([[labels[j]]])
 #add another array into the the array that contains label array
 #this will create one row with two columns
-for k in range(len(outer_arr)):
+#for k in range(len(outer_arr)):
     #print(k)
-    outer_arr[k]+=[training_examples[k]]
+    #outer_arr[k]+=[training_examples[k]]
 #outer_arr=np.asarray(outer_arr)
-str1 = ''.join(str(x) for x in outer_arr)
-file = open('combo_matrix.csv', 'w')
-file.write(str1)
-file.close()
+#directory_in_str = 'MetaGAN/Genomes/fna_files'
+#directory = os.fsencode(directory_in_str)
+#for file in os.listdir(directory):
+    #str1 = ''.join(str(x) for x in file)
+    #file = open(str(file)+'.csv', 'w')
+    #file.write(str1)
+    #file.close()
+#str1 = ''.join(str(x) for x in )
+#file = open('combo_matrix.csv', 'w')
+#file.write(str1)
+#file.close()
 #labeled_examples = np.vstack((training_examples,labels))
 #training_examples = np.asarray(labeled_examples_list)
