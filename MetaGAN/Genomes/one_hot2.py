@@ -60,7 +60,9 @@ for k in range(len(outer_arr)):
     #print(k)
     outer_arr[k]+=[training_examples[k]]
 #outer_arr=np.asarray(outer_arr)
-print(outer_arr)
-
+str1 = ''.join(str(x) for x in outer_arr)
+file = open('combo_matrix.csv', 'w')
+file.write(str1)
+file.close()
 #labeled_examples = np.vstack((training_examples,labels))
 #training_examples = np.asarray(labeled_examples_list)

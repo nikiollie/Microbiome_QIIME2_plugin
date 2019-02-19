@@ -32,12 +32,13 @@ class CNNClassifier():
         """
         Load data
         """
-        true_data = load(filename) # size = 10000 * 150 * 4
+        true_data = load()
         true_labels = load_labels() # size = 10000*1
 
         for e in range(epochs):
             for it in range(len(true_labels)/self.batchsize):
-                x, y = # Get current batch ( x = self.batchsize * 150 * 4, y = self.batchsize * 1)
+                x = self.batchsize * 150 * 4 
+                y = self.batchsize * 1
                 _, l = self.sess.run([opt, loss], feed_dict = {images: x, target: y})
                 print(l)
 
