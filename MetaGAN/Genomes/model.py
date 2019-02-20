@@ -36,9 +36,9 @@ class CNNClassifier():
         true_labels = load_labels() # size = 10000*1
 
         for e in range(epochs):
-            for it in range(len(true_labels)/self.batchsize):
-                x = self.batchsize * 150 * 4 
-                y = self.batchsize * 1
+            for it in range(int(len(true_labels)/self.batchsize)):
+                x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
+                y = true_labels[self.batchsize*it : self.batchsize*(it+1)] 
                 _, l = self.sess.run([opt, loss], feed_dict = {images: x, target: y})
                 print(l)
 
