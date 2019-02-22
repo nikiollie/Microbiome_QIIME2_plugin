@@ -24,7 +24,7 @@ def vectorizeSequence(seq):
     #return [[ltrdict[x] for x in seq]]
 #accepts input file from console (.fna)
 #fileInput = input("enter file: ")
-directory1 ='~/Microbiome_QIIME2_plugin/MetaGAN/Genomes'
+directory1 ='/Users/Christopher/Desktop/MetaGAN/MetaGAN/Genomes'
 
 directory = os.fsencode(directory1)
 for file in os.listdir(directory):
