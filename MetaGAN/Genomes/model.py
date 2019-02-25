@@ -49,12 +49,11 @@ class CNNClassifier():
     def loss_func(self, predict_proba, target_proba):
         return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = predict_proba, labels = target_proba))
     
-    #Optimisation functions usually calculate the partial derivative of loss 
-    #function with respect to weights, and the weights are modified in
-    #the opposite direction of the calculated gradient. 
+    #Optimisation functions calculate the partial derivative of loss 
+    #function with respect to weightsWeek 2
     def optim(self, loss):
         return tf.train.AdamOptimizer(learning_rate = self.learning_rate).minimize(loss)
-    #
+    
     def train(self):
         print("Training...........")
         self.sess = tf.InteractiveSession()
@@ -71,6 +70,7 @@ class CNNClassifier():
             for it in range(int(len(true_labels)/self.batchsize)):
                 x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
                 y = true_labels[self.batchsize*it : self.batchsize*(it+1)] 
+                #get the values of many tensors
                 _, l = self.sess.run([opt, loss], feed_dict = {images: x, target: y})
                 print(l)
 
