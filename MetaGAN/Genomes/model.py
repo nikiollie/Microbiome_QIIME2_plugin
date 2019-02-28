@@ -1,6 +1,6 @@
 import tensorflow as tf 
 import pickle
-
+import os
 class CNNClassifier():
     def load():
         directory1 = os.getcwd()
