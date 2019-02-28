@@ -13,8 +13,8 @@ class CNNClassifier():
                 emp = pickle.load(pickle_off)
                 
                 print(emp)
-             else:
-                 continue
+            else:
+                continue
         return emp
     loaded=load()
 
