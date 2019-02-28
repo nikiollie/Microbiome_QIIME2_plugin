@@ -1,7 +1,21 @@
 import tensorflow as tf 
-
+import pickle
 
 class CNNClassifier():
+    loaded=load()
+    def load():
+        directory1 = os.getcwd()
+        directory = os.fsencode(directory1)
+        for file in os.listdir(directory):
+            filename = os.fsdecode(file)
+            if filename.endswith(".pickle"):
+
+                pickle_off = open(file,"rb")
+                emp = pickle.load(pickle_off)
+                print(emp)
+        return emp
+
+"""
     def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
         self.batchsize = batchsize
@@ -10,9 +24,9 @@ class CNNClassifier():
 
     
     def build_model(self):
-        """
-        Output: probability distribution of size [10]
-        """
+        
+        #Output: probability distribution of size [10]
+        
         #placeholder is a value that we'll when Tensorflow runs this program
         #second agrument in placeholder function corresponds to the dimensions of
         #the matrix
@@ -60,9 +74,9 @@ class CNNClassifier():
         #global_variables_initializer is iterating through the variables of the
         #GLOBAL_VARIABLES collection and calling their initializer.
         tf.global_variables_initializer().run()
-        """
-        Load data
-        """
+       
+        #Load data
+
         true_data = load()
         true_labels = load_labels() # size = 10000*1
         #runs the TensorFlow operations
@@ -73,18 +87,9 @@ class CNNClassifier():
                 #get the values of many tensors
                 _, l = self.sess.run([opt, loss], feed_dict = {images: x, target: y})
                 print(l)
-    def load():
-        directory2 = os.getcwd()
-        directory = os.fsencode(directory1)
-        for file in os.listdir(directory):
-            filename = os.fsdecode(file)
-            if filename.endswith(".pickle"):
-        pickle_off = open(file,"rb")
-        emp = pickle.load(pickle_off)
-        print(emp)
-
-
+                
 if __name__ == "__main__":
     cnnclassifier = CNNClassifier()
     cnnclassifier.build_model()
     cnnclassifier.train()
+"""
