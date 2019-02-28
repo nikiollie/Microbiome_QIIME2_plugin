@@ -2,7 +2,6 @@ import tensorflow as tf
 import pickle
 
 class CNNClassifier():
-    loaded=load()
     def load():
         directory1 = os.getcwd()
         directory = os.fsencode(directory1)
@@ -14,6 +13,7 @@ class CNNClassifier():
                 emp = pickle.load(pickle_off)
                 print(emp)
         return emp
+    loaded=load()
 
 """
     def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
