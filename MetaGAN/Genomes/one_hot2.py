@@ -25,11 +25,7 @@ def vectorizeSequence(seq):
     #return [[ltrdict[x] for x in seq]]
 #accepts input file from console (.fna)
 #fileInput = input("enter file: ")
-<<<<<<< HEAD
 directory1 = os.getcwd()
-=======
-directory1 ='/Users/Christopher/Desktop/MetaGAN/MetaGAN/Genomes'
->>>>>>> 7f6be86ca9e5bcf925c34fd4f84ca2e6c2345623
 
 directory = os.fsencode(directory1)
 for file in os.listdir(directory):

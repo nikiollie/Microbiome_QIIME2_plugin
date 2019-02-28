@@ -73,6 +73,16 @@ class CNNClassifier():
                 #get the values of many tensors
                 _, l = self.sess.run([opt, loss], feed_dict = {images: x, target: y})
                 print(l)
+    def load():
+        directory2 = os.getcwd()
+        directory = os.fsencode(directory1)
+        for file in os.listdir(directory):
+            filename = os.fsdecode(file)
+            if filename.endswith(".pickle"):
+        pickle_off = open(file,"rb")
+        emp = pickle.load(pickle_off)
+        print(emp)
+
 
 if __name__ == "__main__":
     cnnclassifier = CNNClassifier()
