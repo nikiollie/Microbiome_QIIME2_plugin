@@ -3,16 +3,19 @@ import pickle
 import os
 class CNNClassifier():
     def load():
+        counter=0
         directory1 = os.getcwd()
         directory = os.fsencode(directory1)
         for file in os.listdir(directory):
             filename = os.fsdecode(file)
             if filename.endswith(".pickle"):
-
+                counter +=1
+                print(counter)
                 pickle_off = open(file,"rb")
                 emp = pickle.load(pickle_off)
-                
-                print(emp)
+                if emp == '':
+                    break 
+        
             else:
                 continue
         return emp
