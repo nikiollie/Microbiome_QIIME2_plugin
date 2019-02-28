@@ -11,7 +11,10 @@ class CNNClassifier():
 
                 pickle_off = open(file,"rb")
                 emp = pickle.load(pickle_off)
+                
                 print(emp)
+             else:
+                 continue
         return emp
     loaded=load()
 
