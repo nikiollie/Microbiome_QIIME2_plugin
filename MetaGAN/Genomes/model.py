@@ -11,10 +11,11 @@ class CNNClassifier():
             if filename.endswith(".pickle"):
                 counter +=1
                 print(counter)
+                print(filename)
                 pickle_off = open(file,"rb")
                 emp = pickle.load(pickle_off)
-                if emp == '':
-                    break 
+                #if emp == '':
+                #    break 
         
             else:
                 continue
