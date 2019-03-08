@@ -2,27 +2,21 @@ import tensorflow as tf
 import pickle
 import os
 class CNNClassifier():
-    def load():
-        counter=0
+    def load(self):
         directory1 = os.getcwd()
         directory = os.fsencode(directory1)
+        all_emps = []
         for file in os.listdir(directory):
             filename = os.fsdecode(file)
             if filename.endswith(".pickle"):
-                counter +=1
-                print(counter)
-                print(filename)
                 pickle_off = open(file,"rb")
                 emp = pickle.load(pickle_off)
-                #if emp == '':
-                #    break 
         
             else:
                 continue
-        return emp
-    loaded=load()
+            all_emps.append(emp)
+            return all_emps
 
-"""
     def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
         self.batchsize = batchsize
@@ -84,7 +78,7 @@ class CNNClassifier():
        
         #Load data
 
-        true_data = load()
+        true_data = self.load()
         true_labels = load_labels() # size = 10000*1
         #runs the TensorFlow operations
         for e in range(epochs):
@@ -99,4 +93,3 @@ if __name__ == "__main__":
     cnnclassifier = CNNClassifier()
     cnnclassifier.build_model()
     cnnclassifier.train()
-"""

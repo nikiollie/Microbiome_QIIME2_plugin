@@ -20,21 +20,18 @@ def read_fasta(fp):
 def vectorizeSequence(seq):
     # the order of the letters is not arbitrary.
     # Flip the matrix up-down and left-right for reverse compliment
-    ltrdict = {'A':[1,0,0,0],'C':[0,1,0,0],'G':[0,0,1,0],'T':[0,0,0,1]}
+    ltrdict = {'A':[1,0,0,0],'C':[0,1,0,0],'G':[0,0,1,0],'T':[0,0,0,1],
+            'a':[1,0,0,0],'c':[0,1,0,0],'g':[0,0,1,0],'t':[0,0,0,1]}
     return np.array([ltrdict[x] for x in seq])
     #return [[ltrdict[x] for x in seq]]
-#accepts input file from console (.fna)
-#fileInput = input("enter file: ")
 directory1 = os.getcwd()
-
 directory = os.fsencode(directory1)
 for file in os.listdir(directory):
     filename = os.fsdecode(file)
     if filename.endswith(".fna"):
         with open(filename) as fp:
-            #print(filename)
             for name, seq in read_fasta(fp):
-                #print(filename)
+                print(name)
                 i = 0
             one_hot_seq = vectorizeSequence(seq)
         #length of the DNA sample
