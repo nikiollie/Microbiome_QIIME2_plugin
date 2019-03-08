@@ -3,11 +3,19 @@ import numpy as np
 import pickle
 import os
 class CNNClassifier():
+    def identity(n):
+        result = []
+        for i in range(n):
+            row = [0]*n
+            row[i] = 1
+            result.append(row)
+        return result
     def load(self):
         directory = os.path.dirname(os.path.realpath(__file__))
         pickle_directory = directory + "/pickle_files/"
         pickle_directory = os.fsencode(pickle_directory)
         all_emps = []
+        
         for file in os.listdir(pickle_directory):
             filename = os.fsdecode(file)
             if filename == "labels.pickle":
@@ -84,7 +92,14 @@ class CNNClassifier():
         #Load data
 
         true_data, true_labels = self.load()   
-        id_matrix = np.matlib.identity(len(true_labels))
+        true_labels10k = []
+        for row in identity(len(true_labels)):
+            iterations = 10000
+            repeated_entry = np.array([None]*iterations)
+            for i in range(iterations):
+                repeated_entry[i] = row
+            repeated.append(repeated_entry)
+        #repeated = np.asarray(repeated)
         for row in range(len(id_matrix)):
             id_matrix = [row]
         #runs the TensorFlow operations
