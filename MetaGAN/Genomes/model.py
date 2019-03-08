@@ -19,10 +19,10 @@ class CNNClassifier():
         for file in os.listdir(pickle_directory):
             filename = os.fsdecode(file)
             if filename == "labels.pickle":
-                labels_file = open(file, "rb")
+                labels_file = open(file, "r")
                 labels_data = pickle.load(labels_file)
             elif filename.endswith(".pickle"):
-                loaded_pickle = open(file,"rb")
+                loaded_pickle = open(file,"r")
                 emp = pickle.load(loaded_pickle)
         
             else:
