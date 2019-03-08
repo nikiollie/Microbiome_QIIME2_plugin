@@ -3,7 +3,7 @@ import numpy as np
 import pickle
 import os
 class CNNClassifier():
-    def identity(n):
+    def identity(self,n):
         result = []
         for i in range(n):
             row = [0]*n
@@ -13,22 +13,22 @@ class CNNClassifier():
     def load(self):
         directory = os.path.dirname(os.path.realpath(__file__))
         pickle_directory = directory + "/pickle_files/"
+        labels_file = open(os.path.join(pickle_directory, "labels.pickle"), "rb")
+        labels_data = pickle.load(labels_file)
         pickle_directory = os.fsencode(pickle_directory)
         all_emps = []
         
         for file in os.listdir(pickle_directory):
             filename = os.fsdecode(file)
-            if filename == "labels.pickle":
-                labels_file = open(file, "r")
-                labels_data = pickle.load(labels_file)
-            elif filename.endswith(".pickle"):
-                loaded_pickle = open(file,"r")
+            if filename.endswith(".pickle"):
+                pickle_directory = os.fsdecode(pickle_directory)
+                loaded_pickle = open(os.path.join(pickle_directory,filename),"rb")
                 emp = pickle.load(loaded_pickle)
         
             else:
                 continue
             all_emps.append(emp)
-            return all_emps, labels_file
+            return all_emps, labels_data
 
     def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
@@ -91,22 +91,21 @@ class CNNClassifier():
        
         #Load data
 
-        true_data, true_labels = self.load()   
+        true_data, true_labels = self.load()  
         true_labels10k = []
-        for row in identity(len(true_labels)):
+        for row in self.identity(len(true_labels)):
             iterations = 10000
-            repeated_entry = np.array([None]*iterations)
+            repeated_entry = np.zeros((iterations, len(true_labels)))
             for i in range(iterations):
                 repeated_entry[i] = row
-            repeated.append(repeated_entry)
+            true_labels10k.append(repeated_entry)
         #repeated = np.asarray(repeated)
-        for row in range(len(id_matrix)):
-            id_matrix = [row]
-        #runs the TensorFlow operations
+        #runs the TensorFlow operation
+        epochs = 10
         for e in range(epochs):
             for it in range(int(len(true_labels)/self.batchsize)):
                 x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
-                y = true_labels[self.batchsize*it : self.batchsize*(it+1)] 
+                y = true_labels10k[self.batchsize*it : self.batchsize*(it+1)] 
                 #get the values of many tensors
                 _, l = self.sess.run([opt, loss], feed_dict = {images: x, target: y})
                 print(l)
