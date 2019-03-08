@@ -24,12 +24,17 @@ def vectorizeSequence(seq):
             'a':[1,0,0,0],'c':[0,1,0,0],'g':[0,0,1,0],'t':[0,0,0,1]}
     return np.array([ltrdict[x] for x in seq])
     #return [[ltrdict[x] for x in seq]]
-directory1 = os.getcwd()
-directory = os.fsencode(directory1)
-for file in os.listdir(directory):
+#directory = os.getcwd()
+#directory = os.fsencode(directory1)
+directory = os.path.dirname(os.path.realpath(__file__))
+data_directory = directory + "/fna_files/"
+pickle_directory = directory + "/pickle_files/"
+data_directory_encode = os.fsencode(data_directory)
+for file in os.listdir(data_directory_encode):
     filename = os.fsdecode(file)
     if filename.endswith(".fna"):
-        with open(filename) as fp:
+        data_filename = data_directory + filename
+        with open(data_filename) as fp:
             for name, seq in read_fasta(fp):
                 print(name)
                 i = 0
@@ -52,7 +57,7 @@ for file in os.listdir(directory):
         training_examples = np.asarray(training_examples)
     else:
         continue
-    file1 = open(str(file)+'.pickle', 'wb')
+    file1 = open(pickle_directory + str(file) + '.pickle', 'wb')
+    #file1 = open(str(file)+'.pickle', 'wb')
     pickle.dump(training_examples,file1)
     file1.close()
-
