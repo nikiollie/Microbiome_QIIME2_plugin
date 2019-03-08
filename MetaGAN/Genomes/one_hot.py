@@ -36,7 +36,6 @@ for file in os.listdir(data_directory_encode):
         data_filename = data_directory + filename
         with open(data_filename) as fp:
             for name, seq in read_fasta(fp):
-                print(name)
                 i = 0
             one_hot_seq = vectorizeSequence(seq)
         #length of the DNA sample
