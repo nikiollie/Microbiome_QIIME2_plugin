@@ -4,6 +4,9 @@ import csv
 import sys
 import skbio
 import pickle
+
+labels = []
+
 def read_fasta(fp):
         name, seq = None, []
         for line in fp:
@@ -32,6 +35,9 @@ pickle_directory = directory + "/pickle_files/"
 data_directory_encode = os.fsencode(data_directory)
 for file in os.listdir(data_directory_encode):
     filename = os.fsdecode(file)
+    label = list(skbio.io.read(data_directory + filename,
+        format='fasta'))[0].metadata['id']
+    labels.append(label)
     if filename.endswith(".fna"):
         data_filename = data_directory + filename
         with open(data_filename) as fp:
@@ -52,7 +58,11 @@ for file in os.listdir(data_directory_encode):
         training_examples = np.asarray(training_examples)
     else:
         continue
-    file1 = open(pickle_directory + str(file) + '.pickle', 'wb')
-    #file1 = open(str(file)+'.pickle', 'wb')
+    file1 = open(pickle_directory + str(label) + '.pickle', 'wb')
     pickle.dump(training_examples,file1)
     file1.close()
+
+onehot_labels = np.matlib.identity(len(labels))
+pickle_labels = open(pickle_directory + 'labels' + '.pickle', 'wb')
+pickle.dump(onehot_labels, pickle_labels)
+pickle_labels.close()
