@@ -1,8 +1,9 @@
 import numpy as np
 import os
+import csv
+import sys
 import skbio
 import pickle
-
 def read_fasta(fp):
         name, seq = None, []
         for line in fp:
@@ -19,23 +20,23 @@ def read_fasta(fp):
 def vectorizeSequence(seq):
     # the order of the letters is not arbitrary.
     # Flip the matrix up-down and left-right for reverse compliment
-    ltrdict = {'A':[1,0,0,0],'C':[0,1,0,0],'G':[0,0,1,0],'T':[0,0,0,1]}
+    ltrdict = {'A':[1,0,0,0],'C':[0,1,0,0],'G':[0,0,1,0],'T':[0,0,0,1],
+            'a':[1,0,0,0],'c':[0,1,0,0],'g':[0,0,1,0],'t':[0,0,0,1]}
     return np.array([ltrdict[x] for x in seq])
     #return [[ltrdict[x] for x in seq]]
-
-directory = os.path.dirname(os.path.realpath(__file__)) 
+#directory = os.getcwd()
+#directory = os.fsencode(directory1)
+directory = os.path.dirname(os.path.realpath(__file__))
 data_directory = directory + "/fna_files/"
 pickle_directory = directory + "/pickle_files/"
 data_directory_encode = os.fsencode(data_directory)
-
-for filename in os.listdir(data_directory_encode):
-    filename = os.fsdecode(filename)
-    data_filename = data_directory + filename
+for file in os.listdir(data_directory_encode):
+    filename = os.fsdecode(file)
     if filename.endswith(".fna"):
+        data_filename = data_directory + filename
         with open(data_filename) as fp:
-            #print(filename)
             for name, seq in read_fasta(fp):
-                #print(filename)
+                print(name)
                 i = 0
             one_hot_seq = vectorizeSequence(seq)
         #length of the DNA sample
@@ -48,17 +49,12 @@ for filename in os.listdir(data_directory_encode):
     	    #a single 150x4 random example
             example = one_hot_seq[indices,:]
             training_examples.append(example)
-
-        #accepts input label from console
-        labels = input("Enter label for file: ")
         #create an array with 10K elements for 10K rows
         labels = np.asarray([str(labels)]*10000)
         training_examples = np.asarray(training_examples)
     else:
         continue
-    
-    filename = open(pickle_directory + filename + '.pickle', 'wb')
-    pickle.dump(training_examples, filename)
-    filename.close()
-
-print("Mission Accomplished")
+    file1 = open(pickle_directory + str(file) + '.pickle', 'wb')
+    #file1 = open(str(file)+'.pickle', 'wb')
+    pickle.dump(training_examples,file1)
+    file1.close()
