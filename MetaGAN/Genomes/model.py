@@ -1,21 +1,26 @@
-import tensorflow as tf 
+import tensorflow as tf
+import numpy as np
 import pickle
 import os
 class CNNClassifier():
     def load(self):
-        directory1 = os.getcwd()
-        directory = os.fsencode(directory1)
+        directory = os.path.dirname(os.path.realpath(__file__))
+        pickle_directory = directory + "/pickle_files/"
+        pickle_directory = os.fsencode(pickle_directory)
         all_emps = []
-        for file in os.listdir(directory):
+        for file in os.listdir(pickle_directory):
             filename = os.fsdecode(file)
-            if filename.endswith(".pickle"):
-                pickle_off = open(file,"rb")
-                emp = pickle.load(pickle_off)
+            if filename == "labels.pickle":
+                labels_file = open(file, "rb")
+                labels_data = pickle.load(labels_file)
+            elif filename.endswith(".pickle"):
+                loaded_pickle = open(file,"rb")
+                emp = pickle.load(loaded_pickle)
         
             else:
                 continue
             all_emps.append(emp)
-            return all_emps
+            return all_emps, labels_file
 
     def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
@@ -78,8 +83,10 @@ class CNNClassifier():
        
         #Load data
 
-        true_data = self.load()
-        true_labels = load_labels() # size = 10000*1
+        true_data, true_labels = self.load()   
+        id_matrix = np.matlib.identity(len(true_labels))
+        for row in range(len(id_matrix)):
+            id_matrix = [row]
         #runs the TensorFlow operations
         for e in range(epochs):
             for it in range(int(len(true_labels)/self.batchsize)):

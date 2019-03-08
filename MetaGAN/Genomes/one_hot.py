@@ -35,10 +35,10 @@ pickle_directory = directory + "/pickle_files/"
 data_directory_encode = os.fsencode(data_directory)
 for file in os.listdir(data_directory_encode):
     filename = os.fsdecode(file)
-    label = list(skbio.io.read(data_directory + filename,
-        format='fasta'))[0].metadata['id']
-    labels.append(label)
     if filename.endswith(".fna"):
+        label = list(skbio.io.read(data_directory + filename,
+            format='fasta'))[0].metadata['id']
+        labels.append(label)
         data_filename = data_directory + filename
         with open(data_filename) as fp:
             for name, seq in read_fasta(fp):
