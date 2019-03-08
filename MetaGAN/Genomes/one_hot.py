@@ -50,7 +50,6 @@ for file in os.listdir(data_directory_encode):
             example = one_hot_seq[indices,:]
             training_examples.append(example)
         #create an array with 10K elements for 10K rows
-        labels = np.asarray([str(labels)]*10000)
         training_examples = np.asarray(training_examples)
     else:
         continue
