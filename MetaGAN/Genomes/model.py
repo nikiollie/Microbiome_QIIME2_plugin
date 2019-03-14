@@ -25,8 +25,8 @@ class CNNClassifier():
                 loaded_pickle = open(os.path.join(pickle_directory,filename),"rb")
                 emp = pickle.load(loaded_pickle)
         
-            else:
-                continue
+	    else:
+	continue
             all_emps.append(emp)
             return all_emps, labels_data
 
@@ -68,8 +68,8 @@ class CNNClassifier():
         #a generalization of the logistic function that "squashes" a K-dimensional 
         #vector of arbitrary real values to a K-dimensional vector of real values in the range [0, 1] that add up to 1
         outputs = tf.nn.softmax(outputs)
-        loss = self.loss_func(outputs, target)
-        optimizer = self.optim(loss)
+        self.loss = self.loss_func(outputs, target)
+        self.optimizer = self.optim(loss)
         print(outputs.get_shape().as_list())
         print("Built Model")
     #determines the difference between the predicted and target probabiblities/measures
@@ -91,23 +91,32 @@ class CNNClassifier():
        
         #Load data
 
-        true_data, true_labels = self.load()  
-        true_labels10k = []
-        for row in self.identity(len(true_labels)):
-            iterations = 10000
-            repeated_entry = np.zeros((iterations, len(true_labels)))
-            for i in range(iterations):
-                repeated_entry[i] = row
-            true_labels10k.append(repeated_entry)
+        true_data, true_labels = self.load()
+        true_labels = np.array(true_labels) #10000*1  
+        # true_labels10k = []
+        # for row in self.identity(len(true_labels)):
+        #     iterations = 10000
+        #     repeated_entry = np.zeros((iterations, len(true_labels)))
+        #     for i in range(iterations):
+        #         repeated_entry[i] = row
+        #     true_labels10k.append(repeated_entry)
+        # true_labels_hot = np.zeros((true_labels.shape[0], 10))
+        for i in range(true_labels.shape[0]):
+            true_labels_hot[i, true_labels[i]] = 1
+
         #repeated = np.asarray(repeated)
         #runs the TensorFlow operation
         epochs = 10
         for e in range(epochs):
+            np.random.seed(1234)
+            np.random.shuffle(true_data)
+            np.random.seed(1234)
+            np.random.shuffle(true_labels_hot)
             for it in range(int(len(true_labels)/self.batchsize)):
                 x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
                 y = true_labels10k[self.batchsize*it : self.batchsize*(it+1)] 
                 #get the values of many tensors
-                _, l = self.sess.run([opt, loss], feed_dict = {images: x, target: y})
+                _, l = self.sess.run([self.optimizer, self.loss], feed_dict = {images: x, target: y})
                 print(l)
                 
 if __name__ == "__main__":
