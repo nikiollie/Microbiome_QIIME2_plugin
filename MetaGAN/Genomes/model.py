@@ -10,7 +10,14 @@ class CNNClassifier():
             row[i] = 1
             result.append(row)
         return result
+
     def load(self):
+        directory = os.path.dirname(os.path.realpath(__file__))
+        pickle_directory = directory + "/pickle_files/"
+        dataset_file = open(os.path.join(pickle_directory, "dataset.pickle"), "rb")
+        dataset_data = pickle.load(labels_file)
+        
+"""
         directory = os.path.dirname(os.path.realpath(__file__))
         pickle_directory = directory + "/pickle_files/"
         labels_file = open(os.path.join(pickle_directory, "labels.pickle"), "rb")
@@ -29,7 +36,7 @@ class CNNClassifier():
 	continue
             all_emps.append(emp)
             return all_emps, labels_data
-
+"""
     def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
         self.batchsize = batchsize
