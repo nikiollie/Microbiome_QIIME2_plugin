@@ -3,40 +3,20 @@ import numpy as np
 import pickle
 import os
 class CNNClassifier():
-    def identity(self,n):
-        result = []
-        for i in range(n):
-            row = [0]*n
-            row[i] = 1
-            result.append(row)
-        return result
 
     def load(self):
         directory = os.path.dirname(os.path.realpath(__file__))
         pickle_directory = directory + "/pickle_files/"
         dataset_file = open(os.path.join(pickle_directory, "dataset.pickle"), "rb")
         dataset_data = pickle.load(labels_file)
+        np.random.shuffle(dataset_data)
+        true_labels = []
+        true_data = []
+        for j in range(10000):
+            true_data.append(dataset_data[j][0])
+            true_labels.append(dataset_data[j][1])
+        return true_data,true_labels
         
-"""
-        directory = os.path.dirname(os.path.realpath(__file__))
-        pickle_directory = directory + "/pickle_files/"
-        labels_file = open(os.path.join(pickle_directory, "labels.pickle"), "rb")
-        labels_data = pickle.load(labels_file)
-        pickle_directory = os.fsencode(pickle_directory)
-        all_emps = []
-        
-        for file in os.listdir(pickle_directory):
-            filename = os.fsdecode(file)
-            if filename.endswith(".pickle"):
-                pickle_directory = os.fsdecode(pickle_directory)
-                loaded_pickle = open(os.path.join(pickle_directory,filename),"rb")
-                emp = pickle.load(loaded_pickle)
-        
-	    else:
-	continue
-            all_emps.append(emp)
-            return all_emps, labels_data
-"""
     def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
         self.batchsize = batchsize
@@ -99,18 +79,10 @@ class CNNClassifier():
         #Load data
 
         true_data, true_labels = self.load()
-        true_labels = np.array(true_labels) #10000*1  
-        # true_labels10k = []
-        # for row in self.identity(len(true_labels)):
-        #     iterations = 10000
-        #     repeated_entry = np.zeros((iterations, len(true_labels)))
-        #     for i in range(iterations):
-        #         repeated_entry[i] = row
-        #     true_labels10k.append(repeated_entry)
-        # true_labels_hot = np.zeros((true_labels.shape[0], 10))
+        true_labels10k = np.array(true_labels) #10000*1
+        true_labels_hot = np.zeros((true_labels.shape[0], 10))
         for i in range(true_labels.shape[0]):
             true_labels_hot[i, true_labels[i]] = 1
-
         #repeated = np.asarray(repeated)
         #runs the TensorFlow operation
         epochs = 10
