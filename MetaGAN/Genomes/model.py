@@ -15,6 +15,7 @@ class CNNClassifier():
         for j in range(10000):
             true_data.append(dataset_data[j][0])
             true_labels.append(dataset_data[j][1])
+
         return true_data,true_labels
         
     def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
@@ -83,6 +84,8 @@ class CNNClassifier():
         true_labels_hot = np.zeros((true_labels.shape[0], 10))
         for i in range(true_labels.shape[0]):
             true_labels_hot[i, true_labels[i]] = 1
+        print("true data")
+        print(true_data)
         #repeated = np.asarray(repeated)
         #runs the TensorFlow operation
         epochs = 10
