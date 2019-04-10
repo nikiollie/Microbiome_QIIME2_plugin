@@ -63,7 +63,7 @@ for file in os.listdir(data_directory_encode):
             training_examples.append(tuple1)
        
         #create an array with 10K elements for 10K rows
-        training_examples = np.asarray(training_examples)
+        #training_examples = np.asarray(training_examples)
         
         counter +=1
         #print(training_examples)
@@ -74,9 +74,9 @@ for file in os.listdir(data_directory_encode):
         random_indices = np.random.randint(10000, size = 1000)
         for m in range(1000):
             dataset.append(training_examples[random_indices[m]])
-        
     else:
         continue
+print(dataset)
 file1 = open(pickle_directory + 'dataset.pickle', 'wb')
 pickle.dump(dataset,file1)
 file1.close()
