@@ -22,7 +22,7 @@ class CNNClassifier():
       
 
     # Sets up variables needed for model
-    def __init__(self, batchsize = 32, learning_rate = 0.01, epochs = 1):
+    def __init__(self, batchsize = 32, learning_rate = 0.001, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
         self.batchsize = batchsize
         self.learning_rate = learning_rate
@@ -102,14 +102,12 @@ class CNNClassifier():
         for e in range(epochs):
             for it in range(int(len(true_labels)/self.batchsize)):
                 x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
+                x = np.reshape(x,(self.batchsize,150,4,1))
                 y = true_labels_hot[self.batchsize*it : self.batchsize*(it+1)] 
                 #get the values of many tensors
-                print(self.images.shape)
-                print(self.target.shape)
                 _, l = self.sess.run([self.optimizer, self.loss], feed_dict
-                ={'x': self.images, 'y': self.target})
+                    ={self.images:x, self.target:y})
                 print(l)
-  
 
 if __name__ == "__main__":
     cnnclassifier = CNNClassifier()
