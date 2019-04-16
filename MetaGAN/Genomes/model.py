@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pickle
 import os
+import pdb
 class CNNClassifier():
     
     # Loads data from a single directory of pickle files
@@ -61,14 +62,14 @@ class CNNClassifier():
         # Computes matrix multiplication between output and weights_linear1
         outputs_hidden = tf.matmul(output, weights_linear1)
         weights_linear2 = tf.get_variable("weightslinear2", [512, 10], initializer = tf.random_normal_initializer(stddev = 0.02))
-        outputs = tf.matmul(outputs_hidden, weights_linear2)
+        self.outputs = tf.matmul(outputs_hidden, weights_linear2)
         
         # A generalization of the logistic function that "squashes" a K-dimensional 
         # Vector of arbitrary real values to a K-dimensional vector of real values in the range [0, 1] that add up to 1
-        outputs = tf.nn.softmax(outputs)
-        self.loss = self.loss_func(outputs, self.target)
+        self.outputs = tf.nn.softmax(self.outputs)
+        self.loss = self.loss_func(self.outputs, self.target)
         self.optimizer = self.optim(self.loss)
-        print(outputs.get_shape().as_list())
+        print(self.outputs.get_shape().as_list())
         print("Built Model")
 
 
@@ -97,9 +98,11 @@ class CNNClassifier():
         true_labels_hot = np.zeros((true_labels10k.shape[0], 10))
         for i in range(true_labels10k.shape[0]):
             true_labels_hot[i, true_labels[i]] = 1
+        
         #runs the tensorflow operation
-        epochs = 10
+        epochs = 15
         for e in range(epochs):
+            count = 0
             for it in range(int(len(true_labels)/self.batchsize)):
                 x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
                 x = np.reshape(x,(self.batchsize,150,4,1))
@@ -107,7 +110,27 @@ class CNNClassifier():
                 #get the values of many tensors
                 _, l = self.sess.run([self.optimizer, self.loss], feed_dict
                     ={self.images:x, self.target:y})
-                print(l)
+                #print(l)
+			#validation
+            for it in range(int(len(true_labels)/self.batchsize)):
+                x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
+                x = np.reshape(x,(self.batchsize,150,4,1))
+                y = true_labels_hot[self.batchsize*it : self.batchsize*(it+1)] 
+                #get the values of many tensors
+                v = self.sess.run([self.outputs], feed_dict
+                    ={self.images:x, self.target:y})
+                val_max = np.argmax(v[0], 1)
+                acc = true_labels10k[self.batchsize*it : self.batchsize*(it+1)]
+                #compare
+                equal = np.in1d(val_max, acc)
+                for i in range(len(equal)):
+                    if equal[i] == False:
+                        count+=1
+                #print(equal)
+
+                #print(val_max)
+            print(count/len(true_labels10k))
+				
 
 if __name__ == "__main__":
     cnnclassifier = CNNClassifier()
