@@ -110,31 +110,31 @@ class CNNClassifier():
         val_set = true_data[train_length+test_length:train_length+test_length+val_length]
 
         #Trainging and Validation labels
-        training_labels = true_labels[0:train_length] 
-        val_labels = true_labels[train_length+test_length:train_length+test_length+val_length]
+        training_labels = true_labels_hot[0:train_length] 
+        val_labels = true_labels_hot[train_length+test_length:train_length+test_length+val_length]
         
         #runs the tensorflow operation
         epochs = 15
         for e in range(epochs):
             count = 0
-            for it in range(int(len(true_labels)/self.batchsize)): #check this
-                x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
+            for it in range(int(len(training_set)/self.batchsize)): #check this
+                x = training_set[self.batchsize*it : self.batchsize*(it+1)] 
                 x = np.reshape(x,(self.batchsize,150,4,1))
-                y = true_labels_hot[self.batchsize*it : self.batchsize*(it+1)] 
+                y = training_labels[self.batchsize*it : self.batchsize*(it+1)] 
                 #get the values of many tensors
                 _, l = self.sess.run([self.optimizer, self.loss], feed_dict
                     ={self.images:x, self.target:y})
                 #print(l)
 			#validation
-            for it in range(int(len(true_labels)/self.batchsize)):
-                x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
+            for it in range(int(len(val_set)/self.batchsize)):
+                x = val_set[self.batchsize*it : self.batchsize*(it+1)] 
                 x = np.reshape(x,(self.batchsize,150,4,1))
-                y = true_labels_hot[self.batchsize*it : self.batchsize*(it+1)] 
+                y = val_labels[self.batchsize*it : self.batchsize*(it+1)] 
                 #get the values of many tensors
                 v = self.sess.run([self.outputs], feed_dict
                     ={self.images:x, self.target:y})
                 val_max = np.argmax(v[0], 1)
-                acc = true_labels[self.batchsize*it : self.batchsize*(it+1)]
+                acc = val_labels[self.batchsize*it : self.batchsize*(it+1)]
                 #compare
                 val_max = np.array(val_max)
                 acc = np.array(acc)
