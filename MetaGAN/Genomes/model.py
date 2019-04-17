@@ -94,16 +94,32 @@ class CNNClassifier():
         tf.global_variables_initializer().run()
         #Load data
         true_data, true_labels = self.load()
-        true_labels10k = np.asarray(true_labels) #10000*1
-        true_labels_hot = np.zeros((true_labels10k.shape[0], 10))
-        for i in range(true_labels10k.shape[0]):
-            true_labels_hot[i, true_labels[i]] = 1
+        true_labels = np.asarray(true_labels) #10000*1
+        true_labels_hot = np.zeros((true_labels.shape[0], 10))
+        for i in range(true_labels.shape[0]):
+            true_labels_hot[i, true_labels[i]] = 1 #check this
+      
+        #Lengths of different sets
+        train_length = len(true_labels)*0.7
+        test_length = len(true_labels)*0.2
+        val_length = len(true_labels)*0.1
+        
+        #Split data sets
+        training_set = true_data[0:train_length]
+        test_set = true_data[train_length:train_length+test_length]
+        val_set =
+            true_data[train_length+test_length:train_length+test_length+val_length]
+
+        #Trainging and Validation labels
+        training_labels = true_labels[0:train_length] 
+        val_labels =  
+            true_labels[train_length+test_length:train_length+test_length+val_length]
         
         #runs the tensorflow operation
         epochs = 15
         for e in range(epochs):
             count = 0
-            for it in range(int(len(true_labels)/self.batchsize)):
+            for it in range(int(len(true_labels)/self.batchsize)): #check this
                 x = true_data[self.batchsize*it : self.batchsize*(it+1)] 
                 x = np.reshape(x,(self.batchsize,150,4,1))
                 y = true_labels_hot[self.batchsize*it : self.batchsize*(it+1)] 
@@ -120,16 +136,16 @@ class CNNClassifier():
                 v = self.sess.run([self.outputs], feed_dict
                     ={self.images:x, self.target:y})
                 val_max = np.argmax(v[0], 1)
-                acc = true_labels10k[self.batchsize*it : self.batchsize*(it+1)]
+                pdb.set_trace()
+                acc = true_labels[self.batchsize*it : self.batchsize*(it+1)]
                 #compare
-                equal = np.in1d(val_max, acc)
-                for i in range(len(equal)):
-                    if equal[i] == False:
-                        count+=1
-                #print(equal)
-
-                #print(val_max)
-            print(count/len(true_labels10k))
+                val_max = np.array(val_max)
+                acc = np.array(acc)
+                equal = np.sum(val_max == acc)
+                count += equal
+                
+            print("Epoch " + str(e) + " accuracy: " +
+                str(count/len(true_labels)))
 				
 
 if __name__ == "__main__":
