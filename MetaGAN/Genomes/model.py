@@ -100,20 +100,18 @@ class CNNClassifier():
             true_labels_hot[i, true_labels[i]] = 1 #check this
       
         #Lengths of different sets
-        train_length = len(true_labels)*0.7
-        test_length = len(true_labels)*0.2
-        val_length = len(true_labels)*0.1
+        train_length = int(len(true_labels)*0.7)
+        test_length = int(len(true_labels)*0.2)
+        val_length = int(len(true_labels)*0.1)
         
         #Split data sets
         training_set = true_data[0:train_length]
         test_set = true_data[train_length:train_length+test_length]
-        val_set =
-            true_data[train_length+test_length:train_length+test_length+val_length]
+        val_set = true_data[train_length+test_length:train_length+test_length+val_length]
 
         #Trainging and Validation labels
         training_labels = true_labels[0:train_length] 
-        val_labels =  
-            true_labels[train_length+test_length:train_length+test_length+val_length]
+        val_labels = true_labels[train_length+test_length:train_length+test_length+val_length]
         
         #runs the tensorflow operation
         epochs = 15
@@ -136,7 +134,6 @@ class CNNClassifier():
                 v = self.sess.run([self.outputs], feed_dict
                     ={self.images:x, self.target:y})
                 val_max = np.argmax(v[0], 1)
-                pdb.set_trace()
                 acc = true_labels[self.batchsize*it : self.batchsize*(it+1)]
                 #compare
                 val_max = np.array(val_max)
