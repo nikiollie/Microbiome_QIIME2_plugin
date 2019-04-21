@@ -40,13 +40,19 @@ class CNNClassifier():
         
         # Get variable creates a new variable 'kernel'
         # A 4-D tensor of shape [filter_height, filter_width, in_channels, out_channels]
-        kernel = tf.get_variable("conv1weights", [5,4,1,16], initializer = tf.random_normal_initializer(stddev =0.02))
+        kernel = tf.get_variable("conv1weights", [5,4,1,32], initializer = tf.random_normal_initializer(stddev =0.02))
         # Creates a 2-D convolution, the input is 'images',filter=kernel,[1,1,1,1]:pad dimension
         # padding:pad evenly
         conv = tf.nn.conv2d(self.images, kernel, [1,1,1,1], padding = "SAME")
-        bias = tf.get_variable("conv1bias", [16], initializer= tf.constant_initializer(0.0))
-        output = tf.nn.bias_add(conv,  bias)
+        bias = tf.get_variable("conv1bias", [32], initializer= tf.constant_initializer(0.0))
+        output_pre = tf.nn.bias_add(conv,  bias)
         
+        kernel2 = tf.get_variable("conv2weights", [5,4,32,16], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv2 = tf.nn.conv2d(output_pre, kernel2, [1,1,1,1], padding = "SAME")
+        bias2 = tf.get_variable("conv2bias", [16], initializer= tf.constant_initializer(0.0))
+        # Add bias to the weights allows you to shift the activation 
+        # Function to the left or right, which may be critical for successful learning.
+        output = tf.nn.bias_add(conv2,  bias2)
         
         # Given a tensor,output, this operation returns a tensor that 
         # has the same values as tensor with shape shape.
