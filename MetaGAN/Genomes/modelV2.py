@@ -119,7 +119,10 @@ class CNNClassifier():
         val_labels = true_labels[train_length+test_length:train_length+test_length+val_length]
         
         #runs the tensorflow operation
-        epochs = 100
+        epochs = 150
+        print("Learning rate: " + str(self.learning_rate))
+        print("Epochs: " + str(epochs))
+        print("-----------------------------------------------")
         for e in range(epochs):
             count_val = 0
             count_train = 0
@@ -148,7 +151,7 @@ class CNNClassifier():
                 acc = np.array(acc)
                 equal = np.sum(val_max == acc)
                 count_val += equal
-                #print(val_max)
+            
             for it in range(int(len(training_set)/self.batchsize)): 
                 #training accuracy
                 x  = training_set[self.batchsize*it : self.batchsize*(it+1)]

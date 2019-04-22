@@ -23,7 +23,7 @@ class CNNClassifier():
       
 
     # Sets up variables needed for model
-    def __init__(self, batchsize = 32, learning_rate = 0.0005, epochs = 1):
+    def __init__(self, batchsize = 32, learning_rate = 0.00005, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
         self.batchsize = batchsize
         self.learning_rate = learning_rate
@@ -113,7 +113,10 @@ class CNNClassifier():
         val_labels = true_labels[train_length+test_length:train_length+test_length+val_length]
         
         #runs the tensorflow operation
-        epochs = 100
+        epochs = 150
+        print("Learning rate: " + str(self.learning_rate))
+        print("Epochs: " + str(epochs))
+        print("-----------------------------------------------")
         for e in range(epochs):
             count_val = 0
             count_train = 0
