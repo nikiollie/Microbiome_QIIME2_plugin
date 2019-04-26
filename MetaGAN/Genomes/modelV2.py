@@ -23,7 +23,7 @@ class CNNClassifier():
       
 
     # Sets up variables needed for model
-    def __init__(self, batchsize = 32, learning_rate = 0.0005, epochs = 1):
+    def __init__(self, batchsize = 32, learning_rate = 0.001, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
         self.batchsize = batchsize
         self.learning_rate = learning_rate
@@ -40,31 +40,37 @@ class CNNClassifier():
         
         # Get variable creates a new variable 'kernel'
         # A 4-D tensor of shape [filter_height, filter_width, in_channels, out_channels]
-        kernel = tf.get_variable("conv1weights", [5,4,1,32], initializer = tf.random_normal_initializer(stddev =0.02))
+        kernel = tf.get_variable("conv1weights", [3,3,1,32], initializer = tf.random_normal_initializer(stddev =0.02))
         # Creates a 2-D convolution, the input is 'images',filter=kernel,[1,1,1,1]:pad dimension
         # padding:pad evenly
         conv = tf.nn.conv2d(self.images, kernel, [1,1,1,1], padding = "SAME")
         bias = tf.get_variable("conv1bias", [32], initializer= tf.constant_initializer(0.0))
         output_pre = tf.nn.bias_add(conv,  bias)
+        print("Conv1", output_pre.get_shape().as_list())
+
+        pool_1 = tf.nn.max_pool(output_pre, [1,2,2,1], [1,2,2,1], padding="SAME", data_format="NHWC")
+        #tf.layers.max_pool2D
+        print("Pool1", pool_1.get_shape().as_list())
         
-        kernel2 = tf.get_variable("conv2weights", [5,4,32,16], initializer = tf.random_normal_initializer(stddev =0.02))
-        conv2 = tf.nn.conv2d(output_pre, kernel2, [1,1,1,1], padding = "SAME")
+        kernel2 = tf.get_variable("conv2weights", [2,2,32,16], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv2 = tf.nn.conv2d(pool_1, kernel2, [1,1,1,1], padding = "SAME")
         bias2 = tf.get_variable("conv2bias", [16], initializer= tf.constant_initializer(0.0))
         # Add bias to the weights allows you to shift the activation 
         # Function to the left or right, which may be critical for successful learning.
         output = tf.nn.bias_add(conv2,  bias2)
-        
+        print("Conv2", output.get_shape().as_list())
         # Given a tensor,output, this operation returns a tensor that 
         # has the same values as tensor with shape shape.
         output = tf.reshape(output, [output.get_shape().as_list()[0], 
             output.get_shape().as_list()[1]*output.get_shape().as_list()[2]*output.get_shape().as_list()[3]])
         
         # Initial weights are chosen randomly
-        weights_linear1 = tf.get_variable("weightslinear", [9600, 512], initializer = tf.random_normal_initializer(stddev = 0.02))
+        weights_linear1 = tf.get_variable("weightslinear", [2400, 256], initializer = tf.random_normal_initializer(stddev = 0.02))
         
         # Computes matrix multiplication between output and weights_linear1
         outputs_hidden = tf.matmul(output, weights_linear1)
-        weights_linear2 = tf.get_variable("weightslinear2", [512, 10], initializer = tf.random_normal_initializer(stddev = 0.02))
+        outputs_hidden = tf.nn.relu(outputs_hidden)
+        weights_linear2 = tf.get_variable("weightslinear2", [256, 10], initializer = tf.random_normal_initializer(stddev = 0.02))
         self.outputs = tf.matmul(outputs_hidden, weights_linear2)
         
         # A generalization of the logistic function that "squashes" a K-dimensional 
