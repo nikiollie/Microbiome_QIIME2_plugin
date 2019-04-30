@@ -45,32 +45,85 @@ class CNNClassifier():
         # padding:pad evenly
         conv = tf.nn.conv2d(self.images, kernel, [1,1,1,1], padding = "SAME")
         bias = tf.get_variable("conv1bias", [32], initializer= tf.constant_initializer(0.0))
-        output_pre = tf.nn.bias_add(conv,  bias)
-        print("Conv1", output_pre.get_shape().as_list())
+        output1 = tf.nn.bias_add(conv,  bias)
+        print("Conv1", output1.get_shape().as_list())
 
-        pool_1 = tf.nn.max_pool(output_pre, [1,2,2,1], [1,2,2,1], padding="SAME", data_format="NHWC")
+        #150x4 becomes 150x2
+        pool1 = tf.nn.max_pool(output1, [1,1,2,1], [1,1,2,1], padding="SAME", data_format="NHWC")
         #tf.layers.max_pool2D
-        print("Pool1", pool_1.get_shape().as_list())
+        print("Pool1", pool1.get_shape().as_list())
         
-        kernel2 = tf.get_variable("conv2weights", [2,2,32,16], initializer = tf.random_normal_initializer(stddev =0.02))
-        conv2 = tf.nn.conv2d(pool_1, kernel2, [1,1,1,1], padding = "SAME")
-        bias2 = tf.get_variable("conv2bias", [16], initializer= tf.constant_initializer(0.0))
+        kernel2 = tf.get_variable("conv2weights", [2,2,32,32], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv2 = tf.nn.conv2d(pool1, kernel2, [1,1,1,1], padding = "SAME")
+        bias2 = tf.get_variable("conv2bias", [32], initializer= tf.constant_initializer(0.0))
         # Add bias to the weights allows you to shift the activation 
         # Function to the left or right, which may be critical for successful learning.
-        output = tf.nn.bias_add(conv2,  bias2)
-        print("Conv2", output.get_shape().as_list())
+        output2 = tf.nn.bias_add(conv2,  bias2)
+        print("Conv2", output2.get_shape().as_list())
+        
+        #150x2 becomes 150x2
+        pool2 = tf.nn.max_pool(output2, [1,1,1,1], [1,1,1,1], padding="SAME", data_format="NHWC")
+        #tf.layers.max_pool2D
+        print("Pool2", pool2.get_shape().as_list())
+
+
+        kernel3 = tf.get_variable("conv3weights", [2,1,32,32], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv3 = tf.nn.conv2d(pool2, kernel3, [1,1,1,1], padding = "SAME")
+        bias3 = tf.get_variable("conv3bias", [32], initializer= tf.constant_initializer(0.0))
+        # Add bias to the weights allows you to shift the activation 
+        # Function to the left or right, which may be critical for successful learning.
+        output3 = tf.nn.bias_add(conv3,  bias3)
+        print("Conv3", output3.get_shape().as_list())
         # Given a tensor,output, this operation returns a tensor that 
         # has the same values as tensor with shape shape.
+        
+
+        #150x2 becomes 75x1
+        pool3 = tf.nn.max_pool(output3, [1,2,2,1], [1,2,2,1], padding="SAME", data_format="NHWC")
+        #tf.layers.max_pool2D
+        print("Pool3", pool3.get_shape().as_list())
+
+
+        kernel4 = tf.get_variable("conv4weights", [2,1,32,32], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv4 = tf.nn.conv2d(pool3, kernel4, [1,1,1,1], padding = "SAME")
+        bias4 = tf.get_variable("conv4bias", [32], initializer= tf.constant_initializer(0.0))
+        # Add bias to the weights allows you to shift the activation 
+        # Function to the left or right, which may be critical for successful learning.
+        output4 = tf.nn.bias_add(conv4,  bias4)
+        print("Conv4", output4.get_shape().as_list())
+        # Given a tensor,output, this operation returns a tensor that 
+        # has the same values as tensor with shape shape.
+        
+
+        #75x1 becomes 25x1
+        pool4 = tf.nn.max_pool(output4, [1,3,1,1], [1,3,1,1], padding="SAME", data_format="NHWC")
+        #tf.layers.max_pool2D
+        print("Pool4", pool4.get_shape().as_list())
+
+
+        kernel5 = tf.get_variable("conv5weights", [2,1,32,16], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv5 = tf.nn.conv2d(pool4, kernel5, [1,1,1,1], padding = "SAME")
+        bias5 = tf.get_variable("conv5bias", [16], initializer= tf.constant_initializer(0.0))
+        # Add bias to the weights allows you to shift the activation 
+        # Function to the left or right, which may be critical for successful learning.
+        output = tf.nn.bias_add(conv5,  bias5)
+        print("Conv5", output.get_shape().as_list())
+        # Given a tensor,output, this operation returns a tensor that 
+        # has the same values as tensor with shape shape.
+        #output has size 32x400 because 32 batches
         output = tf.reshape(output, [output.get_shape().as_list()[0], 
             output.get_shape().as_list()[1]*output.get_shape().as_list()[2]*output.get_shape().as_list()[3]])
-        
+
+
         # Initial weights are chosen randomly
-        weights_linear1 = tf.get_variable("weightslinear", [2400, 256], initializer = tf.random_normal_initializer(stddev = 0.02))
+        #second parameter [,output size for weight input size]
+        weights_linear1 = tf.get_variable("weightslinear", [400, 32], initializer = tf.random_normal_initializer(stddev = 0.02))
         
         # Computes matrix multiplication between output and weights_linear1
+        #outputs_hidden is 32x32
         outputs_hidden = tf.matmul(output, weights_linear1)
         outputs_hidden = tf.nn.relu(outputs_hidden)
-        weights_linear2 = tf.get_variable("weightslinear2", [256, 10], initializer = tf.random_normal_initializer(stddev = 0.02))
+        weights_linear2 = tf.get_variable("weightslinear2", [32, 10], initializer = tf.random_normal_initializer(stddev = 0.02))
         self.outputs = tf.matmul(outputs_hidden, weights_linear2)
         
         # A generalization of the logistic function that "squashes" a K-dimensional 
@@ -125,7 +178,7 @@ class CNNClassifier():
         val_labels = true_labels[train_length+test_length:train_length+test_length+val_length]
         
         #runs the tensorflow operation
-        epochs = 150
+        epochs = 500
         print("Learning rate: " + str(self.learning_rate))
         print("Epochs: " + str(epochs))
         print("-----------------------------------------------")
