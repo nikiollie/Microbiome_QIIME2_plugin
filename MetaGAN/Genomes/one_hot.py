@@ -29,7 +29,7 @@ def vectorizeSequence(seq):
 #directory = os.getcwd()
 #directory = os.fsencode(directory1)
 directory = os.path.dirname(os.path.realpath(__file__))
-data_directory = directory + "/fna_files/"
+data_directory = directory + "/fna_files_two/"
 pickle_directory = directory + "/pickle_files/"
 data_directory_encode = os.fsencode(data_directory)
 counter = 0
@@ -67,12 +67,8 @@ for file in os.listdir(data_directory_encode):
         
         counter +=1
         #print(training_examples)
-        """outer_arr=[]
-         for j in range(10000):
-            outer_arr.append([training_examples])
-            outer_arr[j]+=[[num_labels]]"""
-        random_indices = np.random.randint(10000, size = 1000)
-        for m in range(1000):
+        random_indices = np.random.randint(10000, size = 10000)
+        for m in range(10000):
             dataset.append(training_examples[random_indices[m]])
     else:
         continue
@@ -81,7 +77,3 @@ file1 = open(pickle_directory + 'dataset.pickle', 'wb')
 pickle.dump(dataset,file1)
 file1.close()
 
-"""onehot_labels = np.matlib.identity(len(labels))
-pickle_labels = open(pickle_directory + 'labels' + '.pickle', 'wb')
-pickle.dump(onehot_labels, pickle_labels)
-pickle_labels.close()"""
