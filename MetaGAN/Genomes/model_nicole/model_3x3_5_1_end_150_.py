@@ -24,7 +24,7 @@ class CNNClassifier():
       
 
     # Sets up variables needed for model
-    def __init__(self, batchsize = 32, learning_rate = 0.0001, epochs = 1):
+    def __init__(self, batchsize = 32, learning_rate = 0.001, epochs = 1):
         #batchsize= the number of samples that will be propagated through the network  
         self.batchsize = batchsize
         self.learning_rate = learning_rate
@@ -54,22 +54,22 @@ class CNNClassifier():
         #tf.layers.max_pool2D
         #print("Pool1", pool1.get_shape().as_list())
         
-        kernel2 = tf.get_variable("conv2weights", [3,3,32,16], initializer = tf.random_normal_initializer(stddev =0.02))
+        kernel2 = tf.get_variable("conv2weights", [3,3,32,32], initializer = tf.random_normal_initializer(stddev =0.02))
         conv2 = tf.nn.conv2d(output1, kernel2, [1,1,1,1], padding = "SAME")
-        bias2 = tf.get_variable("conv2bias", [16], initializer= tf.constant_initializer(0.0))
+        bias2 = tf.get_variable("conv2bias", [32], initializer= tf.constant_initializer(0.0))
         # Add bias to the weights allows you to shift the activation 
         # Function to the left or right, which may be critical for successful learning.
-        output = tf.nn.bias_add(conv2,  bias2)
-        print("Conv2", output.get_shape().as_list())
+        output2 = tf.nn.bias_add(conv2,  bias2)
+        print("Conv2", output2.get_shape().as_list())
         
         #500x2 becomes 500x2
         #pool2 = tf.nn.max_pool(output2, [1,1,1,1], [1,1,1,1], padding="SAME", data_format="NHWC")
         #tf.layers.max_pool2D
         #print("Pool2", pool2.get_shape().as_list())
 
-        """"
-        kernel3 = tf.get_variable("conv3weights", [2,1,32,32], initializer = tf.random_normal_initializer(stddev =0.02))
-        conv3 = tf.nn.conv2d(pool1, kernel3, [1,1,1,1], padding = "SAME")
+        
+        kernel3 = tf.get_variable("conv3weights", [3,3,32,32], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv3 = tf.nn.conv2d(output2, kernel3, [1,1,1,1], padding = "SAME")
         bias3 = tf.get_variable("conv3bias", [32], initializer= tf.constant_initializer(0.0))
         # Add bias to the weights allows you to shift the activation 
         # Function to the left or right, which may be critical for successful learning.
@@ -85,8 +85,8 @@ class CNNClassifier():
         #print("Pool3", pool3.get_shape().as_list())
 
 
-        kernel4 = tf.get_variable("conv4weights", [2,1,32,32], initializer = tf.random_normal_initializer(stddev =0.02))
-        conv4 = tf.nn.conv2d(pool3, kernel4, [1,1,1,1], padding = "SAME")
+        kernel4 = tf.get_variable("conv4weights", [3,3,32,32], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv4 = tf.nn.conv2d(output3, kernel4, [1,1,1,1], padding = "SAME")
         bias4 = tf.get_variable("conv4bias", [32], initializer= tf.constant_initializer(0.0))
         # Add bias to the weights allows you to shift the activation 
         # Function to the left or right, which may be critical for successful learning.
@@ -102,8 +102,8 @@ class CNNClassifier():
         #print("Pool4", pool4.get_shape().as_list())
 
 
-        kernel5 = tf.get_variable("conv5weights", [2,1,32,16], initializer = tf.random_normal_initializer(stddev =0.02))
-        conv5 = tf.nn.conv2d(pool4, kernel5, [1,1,1,1], padding = "SAME")
+        kernel5 = tf.get_variable("conv5weights", [3,3,32,16], initializer = tf.random_normal_initializer(stddev =0.02))
+        conv5 = tf.nn.conv2d(output4, kernel5, [1,1,1,1], padding = "SAME")
         bias5 = tf.get_variable("conv5bias", [16], initializer= tf.constant_initializer(0.0))
         # Add bias to the weights allows you to shift the activation 
         # Function to the left or right, which may be critical for successful learning.
@@ -112,14 +112,19 @@ class CNNClassifier():
         # Given a tensor,output, this operation returns a tensor that 
         # has the same values as tensor with shape shape.
         #output has size 32x400 because 32 batches
-        """
+        
+        #pooling layer
+        #150x4 become 75x2
+        output = tf.nn.max_pool(output, [1,2,2,1], [1,2,2,1], padding="SAME", data_format="NHWC")
+        print("Pool", output.get_shape().as_list())
+
         output = tf.reshape(output, [output.get_shape().as_list()[0], 
             output.get_shape().as_list()[1]*output.get_shape().as_list()[2]*output.get_shape().as_list()[3]])
 		
 
         # Initial weights are chosen randomly
         #second parameter [,output size for weight input size]
-        weights_linear1 = tf.get_variable("weightslinear", [9600, 32], initializer = tf.random_normal_initializer(stddev = 0.02))
+        weights_linear1 = tf.get_variable("weightslinear", [2400, 32], initializer = tf.random_normal_initializer(stddev = 0.02))
         
         # Computes matrix multiplication between output and weights_linear1
         #outputs_hidden is 32x32
